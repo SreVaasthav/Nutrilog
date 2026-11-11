@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NutriLog – Log in</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="split">
+  <div class="hero">
+    <h1>Log what you eat. See what's in it.</h1>
+    <p>Type a food and how many grams. NutriLog works out calories, protein, carbs and fat.</p>
+    <div class="chips">
+      <div class="chip"><b>130</b>kcal in 100 g rice</div>
+      <div class="chip"><b>31 g</b>protein in chicken</div>
+      <div class="chip"><b>0.3 g</b>fat in a banana</div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="card">
+      <h2 id="title">Welcome back</h2>
+      <div class="tabs">
+        <button class="tab active" id="tabLogin">Log in</button>
+        <button class="tab" id="tabSignup">Create account</button>
+      </div>
+      <label for="email">Email</label>
+      <input id="email" type="email" autocomplete="email">
+      <label for="password">Password</label>
+      <input id="password" type="password" autocomplete="current-password">
+      <button class="btn" id="submit">Log in</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+let mode = 'login';
+
+if (localStorage.getItem('token')) location.href = '/home';
+
+function setMode(m) {
+  mode = m;
+  $('tabLogin').classList.toggle('active', m === 'login');
+  $('tabSignup').classList.toggle('active', m === 'signup');
+  $('submit').textContent = m === 'login' ? 'Log in' : 'Create account';
+  $('title').textContent = m === 'login' ? 'Welcome back' : 'Join NutriLog';
+}
+$('tabLogin').onclick = () => setMode('login');
+$('tabSignup').onclick = () => setMode('signup');
+
+function validate(email, password) {
+  if (!email) { alert('Please enter your email.'); return false; }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { alert('Please enter a valid email address.'); return false; }
+  if (!password) { alert('Please enter your password.'); return false; }
+  if (mode === 'signup' && password.length < 6) { alert('Password must be at least 6 characters.'); return false; }
+  return true;
+}
+
+$('submit').onclick = async () => {
+  const email = $('email').value.trim();
+  const password = $('password').value;
+  if (!validate(email, password)) return;
+
+  try {
+    const res = await fetch(mode === 'login' ? '/api/login' : '/api/signup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Something went wrong');
+    localStorage.setItem('token', data.token);
+    location.href = '/home';
+  } catch (e) {
+    alert(e.message);
+  }
+};
+
+['email', 'password'].forEach(id =>
+  $(id).addEventListener('keydown', e => { if (e.key === 'Enter') $('submit').click(); }));
+</script>
+</body>
+</html>

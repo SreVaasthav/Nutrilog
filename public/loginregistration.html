@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NutriLog – Log in</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="split">
+  <div class="hero">
+    <h1>Log what you eat. See what's in it.</h1>
+    <p>Type a food and how many grams. NutriLog works out calories, protein, carbs and fat.</p>
+    <div class="chips">
+      <div class="chip"><b>130</b>kcal in 100 g rice</div>
+      <div class="chip"><b>31 g</b>protein in chicken</div>
+      <div class="chip"><b>0.3 g</b>fat in a banana</div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="card">
+      <h2 id="title">Welcome back</h2>
+      <div class="tabs">
+        <button class="tab active" id="tabLogin">Log in</button>
+        <button class="tab" id="tabSignup">Create account</button>
+      </div>
+      <label for="email">Email</label>
+      <input id="email" type="email" autocomplete="email">
+      <label for="password">Password</label>
+      <input id="password" type="password" autocomplete="current-password">
+      <button class="btn" id="submit">Log in</button>
+      <div class="err" id="err"></div>
+    </div>
+  </div>
+</div>
+<script src="/loginregistration.js"></script>
+</body>
+</html>
